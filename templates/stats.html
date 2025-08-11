@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Attack Statistics{% endblock %}
+{% block content %}
+<h2>Double Spending Attack Statistics</h2>
+
+{% if stats %}
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Hash Rate</th>
+            <th>Network Delay</th>
+            <th>Success</th>
+            <th>Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in stats %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ row['Hash Rate'] }}</td>
+            <td>{{ row['Network Delay'] }}</td>
+            <td>{{ row['Success'] }}</td>
+            <td>{{ row['Reason'] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<div class="alert alert-info">No attack logs found.</div>
+{% endif %}
+{% endblock %}

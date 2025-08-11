@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block title %}New Transaction{% endblock %}
+{% block content %}
+<h2>Create New Transaction</h2>
+
+<form method="POST">
+    <div>
+        <label for="sender">Sender</label>
+        <input type="text" id="sender" name="sender" required>
+    </div>
+    <div>
+        <label for="receiver">Receiver</label>
+        <input type="text" id="receiver" name="receiver" required>
+    </div>
+    <div>
+        <label for="amount">Amount</label>
+        <input type="number" id="amount" name="amount" required>
+    </div>
+    <button type="submit">Broadcast & Mine</button>
+</form>
+
+{% if message %}
+<div>{{ message }}</div>
+{% endif %}
+
+{% if blocks %}
+<hr>
+<h4>Recently Mined Blocks</h4>
+<table>
+    <thead>
+        <tr>
+            <th>Block ID</th>
+            <th>Timestamp</th>
+            <th>Nonce</th>
+            <th>Previous Hash</th>
+            <th>Current Hash</th>
+            <th>Transactions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for block in blocks %}
+        <tr>
+            <td>{{ block.index }}</td>
+            <td>{{ block.timestamp | round(2) }}</td>
+            <td>{{ block.nonce }}</td>
+            <td style="font-size: small; word-break: break-all;">{{ block.previous_hash }}</td>
+            <td style="font-size: small; word-break: break-all;">{{ block.hash }}</td>
+            <td>
+                <ul>
+                    {% for tx in block.transactions %}
+                    <li>
+                        <strong>ID:</strong> {{ tx.id }}<br>
+                        <strong>From:</strong> {{ tx.sender }}<br>
+                        <strong>To:</strong> {{ tx.receiver }}<br>
+                        <strong>Amount:</strong> {{ tx.amount }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock %}

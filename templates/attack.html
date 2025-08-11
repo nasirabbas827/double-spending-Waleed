@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Double Spending Attack{% endblock %}
+{% block content %}
+<h2>Simulate Double Spending Attack</h2>
+<form method="POST">
+    <div>
+        <label for="attacker_hash_rate">Attacker Hash Rate (0.1 to 1.0)</label>
+        <input type="number" step="0.1" id="attacker_hash_rate" name="attacker_hash_rate" required>
+    </div>
+    <div>
+        <label for="network_delay">Network Delay (in seconds)</label>
+        <input type="number" step="0.1" id="network_delay" name="network_delay" required>
+    </div>
+    <button type="submit">Launch Attack</button>
+</form>
+
+{% if result %}
+<div>
+    <strong>Attack Result:</strong> {{ result }}
+</div>
+{% endif %}
+{% endblock %}

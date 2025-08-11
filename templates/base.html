@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Blockchain Simulation{% endblock %}</title>
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: 'Inter', sans-serif; /* Using Inter font for a modern look */
+            margin: 0;
+            background-color: #f4f7f6; /* Light gray background */
+            color: #333; /* Darker text color for readability */
+            line-height: 1.6;
+        }
+
+        /* Navigation Bar Styling */
+        nav {
+            background-color: #2c3e50; /* Dark blue-gray for the navbar */
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            border-bottom-left-radius: 8px; /* Rounded corners for the bottom */
+            border-bottom-right-radius: 8px;
+        }
+
+        nav a {
+            color: #ecf0f1; /* Light gray for nav links */
+            text-decoration: none;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        nav a:hover {
+            background-color: #34495e; /* Slightly lighter dark blue-gray on hover */
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 1rem; /* Space between nav items */
+        }
+
+        /* Content Container */
+        .container {
+            max-width: 960px; /* Max width for content */
+            margin: 2rem auto; /* Center the container with vertical margin */
+            padding: 1.5rem;
+            background-color: #ffffff; /* White background for content */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Headings */
+        h1, h2, h3, h4, h5, h6 {
+            color: #2c3e50; /* Dark blue-gray for headings */
+            margin-bottom: 1rem;
+            text-align: center; /* Center main headings */
+        }
+
+        /* Horizontal Rule */
+        hr {
+            border: 0;
+            height: 1px;
+            background-color: #ccc;
+            margin: 2rem 0;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            background-color: #fff;
+            border-radius: 8px;
+            overflow: hidden; /* Ensures rounded corners apply to table content */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        table th, table td {
+            border: 1px solid #ddd; /* Light gray border */
+            padding: 0.8rem;
+            text-align: left;
+        }
+
+        table th {
+            background-color: #3498db; /* Blue header */
+            color: white;
+            font-weight: bold;
+        }
+
+        table tbody tr:nth-child(even) {
+            background-color: #f8f8f8; /* Light stripe effect */
+        }
+
+        table tbody tr:hover {
+            background-color: #f1f1f1; /* Hover effect for rows */
+        }
+
+        /* Form Styling */
+        form div {
+            margin-bottom: 1rem;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        form input[type="text"],
+        form input[type="number"] {
+            width: calc(100% - 20px); /* Adjust width for padding */
+            padding: 0.75rem 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; /* Include padding in width */
+            transition: border-color 0.3s ease;
+        }
+
+        form input[type="text"]:focus,
+        form input[type="number"]:focus {
+            border-color: #3498db; /* Highlight on focus */
+            outline: none;
+        }
+
+        /* Button Styling */
+        button[type="submit"],
+        .button { /* Generic button class */
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none; /* For anchor tags styled as buttons */
+            text-align: center;
+        }
+
+        button[type="submit"] {
+            background-color: #2ecc71; /* Green for primary actions */
+            color: white;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #27ae60; /* Darker green on hover */
+            transform: translateY(-2px);
+        }
+
+        .button.danger {
+            background-color: #e74c3c; /* Red for danger actions */
+            color: white;
+        }
+
+        .button.danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        .button.secondary {
+            background-color: #95a5a6; /* Gray for secondary actions */
+            color: white;
+        }
+
+        .button.secondary:hover {
+            background-color: #7f8c8d;
+            transform: translateY(-2px);
+        }
+
+        /* Alert/Message Styling */
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1.5rem;
+            font-weight: bold;
+        }
+
+        .alert.success {
+            background-color: #d4edda; /* Light green for success */
+            color: #155724; /* Dark green text */
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert.warning {
+            background-color: #fff3cd; /* Light yellow for warning */
+            color: #856404; /* Dark yellow text */
+            border: 1px solid #ffeeba;
+        }
+
+        /* List Group Styling (for index.html action links) */
+        .list-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem; /* Space between list items */
+            margin-top: 1.5rem;
+        }
+
+        .list-group-item {
+            display: block;
+            padding: 1rem 1.25rem;
+            background-color: #f8f9fa; /* Light background */
+            border: 1px solid #e9ecef; /* Light border */
+            border-radius: 5px;
+            text-decoration: none;
+            color: #007bff; /* Blue link color */
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .list-group-item:hover {
+            background-color: #e2e6ea; /* Darker background on hover */
+            transform: translateX(5px); /* Slight slide effect */
+        }
+
+        /* Utility classes for layout */
+        .text-center {
+            text-align: center;
+        }
+
+        .mb-4 {
+            margin-bottom: 2rem;
+        }
+
+        .mt-3 {
+            margin-top: 1.5rem;
+        }
+
+        .mt-5 {
+            margin-top: 3rem;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Center content in rows */
+        }
+
+        .col-md-6 {
+            flex: 0 0 100%; /* Default to full width on small screens */
+            max-width: 100%;
+        }
+
+        /* Responsive adjustments */
+        @media (min-width: 768px) {
+            .col-md-6 {
+                flex: 0 0 50%; /* 50% width on medium screens and up */
+                max-width: 50%;
+            }
+        }
+
+        /* Small font size for hashes */
+        .small-font {
+            font-size: 0.85em;
+            word-break: break-all;
+        }
+
+        /* For transaction list within table */
+        ul.no-margin {
+            margin-bottom: 0;
+            padding-left: 1.2rem; /* Indent list items */
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/">Blockchain Simulator</a>
+        <div>
+            <ul>
+                <li><a href="/transaction/new">New Transaction</a></li>
+                <li><a href="/mine">Mine Block</a></li>
+                <li><a href="/attack">Double Spending Attack</a></li>
+                <li><a href="/stats">Attack Stats</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,3 @@
+Hash Rate,Network Delay,Success,Reason
+1.0,0.1,True,Attacker outpaced honest nodes with high hash power
+0.1,2.0,False,Attacker failed due to low hash power
