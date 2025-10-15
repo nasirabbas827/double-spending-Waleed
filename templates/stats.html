@@ -4,7 +4,7 @@
 <h2>Double Spending Attack Statistics</h2>
 
 {% if stats %}
-<table class="table table-bordered mt-3">
+<table>
     <thead>
         <tr>
             <th>#</th>
@@ -12,6 +12,8 @@
             <th>Network Delay</th>
             <th>Success</th>
             <th>Reason</th>
+            <th>Honest Chain</th>
+            <th>Private Chain</th>
         </tr>
     </thead>
     <tbody>
@@ -22,10 +24,17 @@
             <td>{{ row['Network Delay'] }}</td>
             <td>{{ row['Success'] }}</td>
             <td>{{ row['Reason'] }}</td>
+            <td class="small-font">{{ row['Honest Chain'] }}</td>
+            <td class="small-font">{{ row['Private Chain'] }}</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+{% if plot_url %}
+<h3>Attack Success Rate Visualization</h3>
+<img src="data:image/png;base64,{{ plot_url }}" alt="Attack Success Pie Chart">
+{% endif %}
 
 {% else %}
 <div class="alert alert-info">No attack logs found.</div>

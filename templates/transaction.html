@@ -6,21 +6,29 @@
 <form method="POST">
     <div>
         <label for="sender">Sender</label>
-        <input type="text" id="sender" name="sender" required>
+        <select id="sender" name="sender" required>
+            {% for node in nodes %}
+            <option value="{{ node }}">{{ node }}</option>
+            {% endfor %}
+        </select>
     </div>
     <div>
         <label for="receiver">Receiver</label>
-        <input type="text" id="receiver" name="receiver" required>
+        <select id="receiver" name="receiver" required>
+            {% for node in nodes %}
+            <option value="{{ node }}">{{ node }}</option>
+            {% endfor %}
+        </select>
     </div>
     <div>
-        <label for="amount">Amount</label>
-        <input type="number" id="amount" name="amount" required>
+        <label for="amount">Amount (1-100)</label>
+        <input type="number" id="amount" name="amount" min="1" max="100" required>
     </div>
-    <button type="submit">Broadcast & Mine</button>
+    <button type="submit">Broadcast Transaction</button>
 </form>
 
-{% if message %}
-<div>{{ message }}</div>
+{% if message and message %}
+<div class="alert success">{{ message }}</div>
 {% endif %}
 
 {% if blocks %}
@@ -36,6 +44,7 @@
             <th>Current Hash</th>
             <th>Transactions</th>
         </tr>
+    </tr>
     </thead>
     <tbody>
         {% for block in blocks %}
@@ -43,10 +52,10 @@
             <td>{{ block.index }}</td>
             <td>{{ block.timestamp | round(2) }}</td>
             <td>{{ block.nonce }}</td>
-            <td style="font-size: small; word-break: break-all;">{{ block.previous_hash }}</td>
-            <td style="font-size: small; word-break: break-all;">{{ block.hash }}</td>
+            <td class="small-font">{{ block.previous_hash }}</td>
+            <td class="small-font">{{ block.hash }}</td>
             <td>
-                <ul>
+                <ul class="no-margin">
                     {% for tx in block.transactions %}
                     <li>
                         <strong>ID:</strong> {{ tx.id }}<br>
@@ -58,7 +67,7 @@
                 </ul>
             </td>
         </tr>
-        {% endfor %}
+        {% endfor%}
     </tbody>
 </table>
 {% endif %}

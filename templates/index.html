@@ -10,6 +10,7 @@
             <th>Node Name</th>
             <th>Hash Power</th>
             <th>Network Delay (s)</th>
+            <th>Balance</th>
         </tr>
     </thead>
     <tbody>
@@ -18,6 +19,7 @@
             <td>{{ node.name }}</td>
             <td>{{ node.hash_rate }}</td>
             <td>{{ node.delay }}</td>
+            <td>{{ node.balance }}</td>
         </tr>
         {% endfor %}
     </tbody>
