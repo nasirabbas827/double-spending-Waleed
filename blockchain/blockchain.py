@@ -3,18 +3,20 @@ import time
 import uuid
 
 class Transaction:
-    def __init__(self, sender, receiver, amount):
+    def __init__(self, sender, receiver, amount, timestamp=None):
         self.id = str(uuid.uuid4())
         self.sender = sender
         self.receiver = receiver
         self.amount = amount
+        self.timestamp = timestamp if timestamp is not None else time.time()
 
     def to_dict(self):
         return {
             "id": self.id,
             "sender": self.sender,
             "receiver": self.receiver,
-            "amount": self.amount
+            "amount": self.amount,
+            "timestamp": self.timestamp
         }
 
 class Block:
@@ -29,6 +31,16 @@ class Block:
     def compute_hash(self):
         block_string = str(self.index) + str(self.timestamp) + str([tx.to_dict() for tx in self.transactions]) + self.previous_hash + str(self.nonce)
         return hashlib.sha256(block_string.encode()).hexdigest()
+
+    def to_dict(self):
+        return {
+            "index": self.index,
+            "hash": self.hash,
+            "previous_hash": self.previous_hash,
+            "timestamp": self.timestamp,
+            "transactions": [tx.to_dict() for tx in self.transactions],
+            "nonce": self.nonce
+        }
 
 class Blockchain:
     def __init__(self, difficulty=2):

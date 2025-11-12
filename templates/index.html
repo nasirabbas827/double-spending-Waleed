@@ -25,6 +25,52 @@
     </tbody>
 </table>
 
+<h4>Blockchain</h4>
+{% if blockchain %}
+<table>
+    <thead>
+        <tr>
+            <th>Index</th>
+            <th>Hash</th>
+            <th>Previous Hash</th>
+            <th>Timestamp</th>
+            <th>Nonce</th>
+            <th>Transactions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for block in blockchain %}
+        <tr>
+            <td>{{ block.index }}</td>
+            <td>{{ block.hash | truncate(16, True, '...') }}</td>
+            <td>{{ block.previous_hash | truncate(16, True, '...') }}</td>
+            <td>{{ block.timestamp }}</td>
+            <td>{{ block.nonce }}</td>
+            <td>
+                {% if block.transactions %}
+                <ul>
+                    {% for tx in block.transactions %}
+                    <li>
+                        ID: {{ tx.id | truncate(8, True, '...') }}<br>
+                        Sender: {{ tx.sender }}<br>
+                        Receiver: {{ tx.receiver }}<br>
+                        Amount: {{ tx.amount }}<br>
+                        Timestamp: {{ tx.timestamp }}
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                No transactions
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">No blocks in the blockchain.</div>
+{% endif %}
+
 <hr>
 <div>
     <div>
@@ -33,6 +79,7 @@
             <a href="/mine">➤ Mine Block</a>
             <a href="/attack">➤ Simulate Double Spending Attack</a>
             <a href="/stats">➤ View Attack Statistics</a>
+            <a href="/tx_logs">➤ View Transaction Logs</a>
         </div>
     </div>
 </div>

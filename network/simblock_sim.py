@@ -20,7 +20,7 @@ class Node:
                 self.mempool.append(tx)
             if tx not in self.blockchain.pending_transactions:
                 self.blockchain.add_transaction(tx)
-            print(f"[{self.name}] Received transaction: {tx.sender} -> {tx.receiver} (Amount: {tx.amount}, ID: {tx.id})")
+            print(f"[{self.name}] Received transaction: {tx.sender} -> {tx.receiver} (Amount: {tx.amount}, ID: {tx.id}, Timestamp: {tx.timestamp})")
             sender_bal = self.blockchain.get_balance(tx.sender)
             if sender_bal < tx.amount:
                 print(f"[{self.name}] Validation failed: Insufficient funds for {tx.sender}")
@@ -58,7 +58,7 @@ class BlockchainNetworkSimulator:
             self.nodes.append(node)
 
     def broadcast_transaction(self, tx):
-        print(f"Broadcasting transaction: {tx.sender} -> {tx.receiver} (Amount: {tx.amount}, ID: {tx.id})")
+        print(f"Broadcasting transaction: {tx.sender} -> {tx.receiver} (Amount: {tx.amount}, ID: {tx.id}, Timestamp: {tx.timestamp})")
         for node in self.nodes:
             self.env.process(self.deliver_transaction(node, tx))
         self.env.run()

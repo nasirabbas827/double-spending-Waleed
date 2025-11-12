@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')  # Non-interactive backend
 from flask import Flask, render_template, request, send_file
 from blockchain.blockchain import Transaction
 from network.simblock_sim import BlockchainNetworkSimulator
@@ -22,7 +24,19 @@ def index():
         {"name": node.name, "hash_rate": round(node.hash_rate, 2), "delay": round(node.delay, 2), "balance": simulator.blockchain.get_balance(node.name)}
         for node in simulator.nodes
     ]
-    return render_template("index.html", nodes=node_data)
+    # Prepare blockchain data
+    blockchain_data = [
+        {
+            "index": block.index,
+            "hash": block.hash,
+            "previous_hash": block.previous_hash,
+            "timestamp": block.timestamp,
+            "nonce": block.nonce,
+            "transactions": [tx.to_dict() for tx in block.transactions]
+        }
+        for block in simulator.blockchain.chain
+    ]
+    return render_template("index.html", nodes=node_data, blockchain=blockchain_data)
 
 @app.route('/transaction/new', methods=["GET", "POST"])
 def new_transaction():
@@ -39,7 +53,7 @@ def new_transaction():
             writer = csv.writer(f)
             if f.tell() == 0:
                 writer.writerow(["TX ID", "Sender", "Receiver", "Amount", "Timestamp"])
-            writer.writerow([tx.id, sender, receiver, amount, time.time()])
+            writer.writerow([tx.id, sender, receiver, amount, tx.timestamp])
         
         message = "Transaction broadcasted successfully."
 
@@ -80,8 +94,10 @@ def stats():
     if len(df) > 0:
         # Success rate pie
         success_counts = df['Success'].value_counts()
+        counts = [success_counts.get(False, 0), success_counts.get(True, 0)]
+        labels = ['Failed', 'Succeeded']
         fig, ax = plt.subplots()
-        ax.pie(success_counts, labels=['Failed', 'Succeeded'], autopct='%1.1f%%', colors=['#e74c3c', '#2ecc71'])
+        ax.pie(counts, labels=labels, autopct='%1.1f%%', colors=['#e74c3c', '#2ecc71'])
         ax.set_title('Attack Success Rate')
         
         # Hash rate vs success scatter
@@ -92,11 +108,14 @@ def stats():
         ax2.set_ylabel('Network Delay')
         ax2.set_title('Attack Outcomes by Hash Rate and Delay')
         
-        # Combine plots or send one, here base64 for success pie
+        # Save pie chart to base64
         buf = io.BytesIO()
         fig.savefig(buf, format='png')
         buf.seek(0)
         plot_url = base64.b64encode(buf.read()).decode('utf-8')
+        buf.close()
+        plt.close(fig)
+        plt.close(fig2)
         
     return render_template("stats.html", stats=stats_data, plot_url=plot_url)
 
